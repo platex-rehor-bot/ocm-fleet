@@ -1,9 +1,9 @@
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { Output } from "../../ui";
 import { clientForArgs } from "../context";
 import { resourceRoute } from "./helpers";
 
-export const deleteCommand = defineCommand({
+export const deleteCommand = registerCommand({
   path: "resource delete",
   description: "Delete a managed resource",
   implemented: true,

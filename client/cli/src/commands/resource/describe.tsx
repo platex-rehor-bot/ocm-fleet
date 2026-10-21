@@ -1,7 +1,7 @@
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { describeResourceType, listResourceTypes } from "../../grpc/reflection";
 
-export const describeCommand = defineCommand({
+export const describeCommand = registerCommand({
   path: "resource describe",
   description: "Show managed resource schema",
   implemented: true,

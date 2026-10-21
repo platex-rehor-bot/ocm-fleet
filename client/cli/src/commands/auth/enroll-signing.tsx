@@ -1,8 +1,8 @@
 import { runAuthEnrollSigning } from "../../auth/enroll-signing";
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { Output } from "../../ui";
 
-export const enrollSigningCommand = defineCommand({
+export const enrollSigningCommand = registerCommand({
   path: "auth enroll-signing",
   description: "Generate and enroll signing key pair",
   implemented: true,

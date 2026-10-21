@@ -1,10 +1,12 @@
 import type { ComponentType } from "react";
 
-import { defineCommand } from "../command";
+import { parseArgs } from "../argv";
+import { registerCommand } from "../command";
+import type { CommandEntry, CommandSpec } from "../commands/types";
 
 declare const View: ComponentType<{ data: { name: string } }>;
 
-defineCommand({
+registerCommand({
   path: "example",
   description: "Example",
   implemented: true,
@@ -12,7 +14,7 @@ defineCommand({
   View,
 });
 
-defineCommand({
+registerCommand({
   path: "example",
   description: "Example",
   implemented: true,
@@ -21,7 +23,7 @@ defineCommand({
   View,
 });
 
-defineCommand<{ name: string }>({
+registerCommand<{ name: string }>({
   path: "example",
   description: "Example",
   implemented: true,
@@ -31,7 +33,7 @@ defineCommand<{ name: string }>({
 });
 
 // @ts-expect-error A command cannot declare both a view and an exact-text formatter.
-defineCommand({
+registerCommand({
   path: "example",
   description: "Example",
   implemented: true,
@@ -39,3 +41,40 @@ defineCommand({
   View,
   formatText: (data: { name: string }) => data.name,
 });
+
+const spec: CommandSpec<{ name: string }> = {
+  path: "example",
+  description: "Example",
+  implemented: true,
+  run: async () => ({ name: "ready" }),
+  View,
+};
+
+const registered = registerCommand(spec);
+
+// @ts-expect-error Registry consumers must access the typed spec through withSpec.
+void registered.run;
+
+registered.withSpec(async (spec) => {
+  const data = await spec.run({ args: parseArgs([]) });
+  // @ts-expect-error A registry consumer cannot assume a particular data type.
+  void data.name;
+});
+
+const invalidSpec: CommandSpec<{ name: string }> = {
+  path: "example",
+  description: "Example",
+  implemented: true,
+  // @ts-expect-error The spec itself checks the data returned by run.
+  run: async () => ({ count: 1 }),
+  View,
+};
+void invalidSpec;
+
+// @ts-expect-error An implemented registry entry must provide access to a typed spec.
+const incompleteEntry: CommandEntry = {
+  path: "example",
+  description: "Example",
+  implemented: true,
+};
+void incompleteEntry;

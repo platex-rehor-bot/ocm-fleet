@@ -1,7 +1,7 @@
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { listResourceTypes } from "../../grpc/reflection";
 
-export const typesCommand = defineCommand({
+export const typesCommand = registerCommand({
   path: "resource types",
   description: "List available extension resource types",
   implemented: true,

@@ -11,7 +11,7 @@
 ## Structure
 
 - `src/main.tsx`: process entry point and dispatch.
-- `src/command.tsx`: typed command definition adapter.
+- `src/command.tsx`: typed command registration adapter.
 - `src/app.tsx`: output formatting, stdout writes, and Ink rendering.
 - `src/commands/registry.ts`: command registration only.
 - `src/commands/help.ts`: help rendering.

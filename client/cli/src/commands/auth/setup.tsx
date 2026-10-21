@@ -1,7 +1,7 @@
 import { runAuthSetup } from "../../auth/setup";
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { Output } from "../../ui";
-export const setupCommand = defineCommand({
+export const setupCommand = registerCommand({
   path: "auth setup",
   description: "Configure OIDC client settings",
   implemented: true,

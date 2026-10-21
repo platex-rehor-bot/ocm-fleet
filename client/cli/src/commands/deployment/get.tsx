@@ -1,7 +1,7 @@
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { deploymentClient, deploymentName } from "./helpers";
 
-export const getCommand = defineCommand({
+export const getCommand = registerCommand({
   path: "deployment get",
   description: "Get deployment by name",
   implemented: true,

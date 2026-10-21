@@ -4,14 +4,19 @@ import { render } from "ink";
 import type { ReactElement, ReactNode } from "react";
 
 import type { OutputFormat } from "./argv";
-import type { CommandResult } from "./commands/types";
+import type { CommandContext, CommandSpec } from "./commands/types";
 
-export function formatOutput(
-  result: CommandResult,
-  output: OutputFormat,
-): ReactElement | string {
-  if (output === "table" && result.renderHuman) return result.renderHuman();
-  return JSON.stringify(result.data, null, 2) ?? "null";
+export async function executeCommand<Data>(
+  spec: CommandSpec<Data>,
+  context: CommandContext,
+  output: OutputFormat = "table",
+): Promise<ReactElement | string> {
+  const data = await spec.run(context);
+  if (output === "table") {
+    if (spec.View) return <spec.View data={data} />;
+    if (spec.formatText) return spec.formatText(data);
+  }
+  return JSON.stringify(data, null, 2) ?? "null";
 }
 
 /** Write exact text without terminal wrapping that would split identifiers. */
@@ -33,11 +38,7 @@ export async function writeText(
   });
 }
 
-export async function print(
-  result: CommandResult,
-  output: OutputFormat = "table",
-): Promise<void> {
-  const content = formatOutput(result, output);
+export async function print(content: ReactElement | string): Promise<void> {
   if (typeof content === "string") await writeText(content);
   else await printView(content);
 }

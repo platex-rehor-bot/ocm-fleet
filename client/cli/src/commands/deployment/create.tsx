@@ -1,5 +1,5 @@
 import { flagString } from "../../argv";
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { configDirectory } from "../../config";
 import {
   buildDeploymentEnvelope,
@@ -12,7 +12,7 @@ import {
   readManifest,
 } from "./helpers";
 
-export const createCommand = defineCommand({
+export const createCommand = registerCommand({
   path: "deployment create",
   description: "Create a deployment",
   implemented: true,

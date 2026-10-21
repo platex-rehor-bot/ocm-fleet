@@ -1,8 +1,8 @@
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { clientForArgs } from "../context";
 import { resourceRoute } from "./helpers";
 
-export const getCommand = defineCommand({
+export const getCommand = registerCommand({
   path: "resource get",
   description: "Get a managed resource by id",
   implemented: true,

@@ -1,8 +1,8 @@
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { Output } from "../../ui";
 import { deploymentClient, deploymentName } from "./helpers";
 
-export const deleteCommand = defineCommand({
+export const deleteCommand = registerCommand({
   path: "deployment delete",
   description: "Delete a deployment",
   implemented: true,

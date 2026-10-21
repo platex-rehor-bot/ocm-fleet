@@ -1,16 +1,16 @@
-import type { CommandSpec } from "../types";
+import type { CommandEntry } from "../types";
 import { enrollSigningCommand } from "./enroll-signing";
 import { inspectTokenCommand } from "./inspect-token";
 import { loginCommand } from "./login";
 import { logoutCommand } from "./logout";
 import { setupCommand } from "./setup";
 
-export const authCommand: CommandSpec = {
+export const authCommand: CommandEntry = {
   path: "auth",
   description: "Manage authentication",
 };
 
-export const authCommands: CommandSpec[] = [
+export const authCommands: CommandEntry[] = [
   setupCommand,
   loginCommand,
   logoutCommand,

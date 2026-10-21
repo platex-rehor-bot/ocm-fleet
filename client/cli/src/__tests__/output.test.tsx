@@ -6,18 +6,23 @@ import { cleanup, render } from "ink-testing-library";
 import { useState } from "react";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { formatOutput, writeText } from "../app";
-import { parseArgs } from "../argv";
-import { defineCommand } from "../command";
+import { executeCommand, writeText } from "../app";
+import { type OutputFormat, parseArgs } from "../argv";
+import { registerCommand } from "../command";
+import type { RegisteredCommand } from "../commands/types";
 
 afterEach(cleanup);
 
 const context = { args: parseArgs([]) };
 
+async function present(command: RegisteredCommand, output: OutputFormat) {
+  return command.withSpec((spec) => executeCommand(spec, context, output));
+}
+
 describe("command output", () => {
   it("serializes original data without evaluating the human presenter", async () => {
     const data = { identifier: "a".repeat(200), enabled: false };
-    const command = defineCommand({
+    const command = registerCommand({
       path: "example",
       description: "Example",
       implemented: true,
@@ -27,9 +32,7 @@ describe("command output", () => {
       },
     });
 
-    expect(formatOutput(await command.run(context), "json")).toBe(
-      JSON.stringify(data, null, 2),
-    );
+    expect(await present(command, "json")).toBe(JSON.stringify(data, null, 2));
   });
 
   it("passes returned data to a React component that can use hooks", async () => {
@@ -37,7 +40,7 @@ describe("command output", () => {
       const [name] = useState(data.name);
       return <Text>{name}</Text>;
     }
-    const command = defineCommand({
+    const command = registerCommand({
       path: "example",
       description: "Example",
       implemented: true,
@@ -45,44 +48,44 @@ describe("command output", () => {
       View,
     });
 
-    const content = formatOutput(await command.run(context), "table");
+    const content = await present(command, "table");
     if (typeof content === "string") throw new Error("Expected a React view");
     const view = render(content);
     expect(view.lastFrame()).toBe("fleetctl ready");
   });
 
   it("uses JSON as the default presentation when a command has no human view", async () => {
-    const command = defineCommand({
+    const command = registerCommand({
       path: "example",
       description: "Example",
       implemented: true,
       run: async () => ({ names: ["one", "two"] }),
     });
-    const result = await command.run(context);
 
-    expect(formatOutput(result, "table")).toBe(formatOutput(result, "json"));
+    expect(await present(command, "table")).toBe(
+      await present(command, "json"),
+    );
   });
 
   it("keeps exact text separate from JSON serialization", async () => {
-    const command = defineCommand({
+    const command = registerCommand({
       path: "example",
       description: "Example",
       implemented: true,
       run: async () => ["ocm.kind.v1alpha/clusters"],
       formatText: (data) => ["TYPE", ...data].join("\n"),
     });
-    const result = await command.run(context);
 
-    expect(formatOutput(result, "table")).toBe(
+    expect(await present(command, "table")).toBe(
       "TYPE\nocm.kind.v1alpha/clusters",
     );
-    expect(formatOutput(result, "json")).toBe(
+    expect(await present(command, "json")).toBe(
       '[\n  "ocm.kind.v1alpha/clusters"\n]',
     );
   });
 
   it("does not evaluate an exact-text formatter for JSON output", async () => {
-    const command = defineCommand({
+    const command = registerCommand({
       path: "example",
       description: "Example",
       implemented: true,
@@ -92,7 +95,7 @@ describe("command output", () => {
       },
     });
 
-    expect(formatOutput(await command.run(context), "json")).toBe(
+    expect(await present(command, "json")).toBe(
       '[\n  "ocm.kind.v1alpha/clusters"\n]',
     );
   });
@@ -100,14 +103,14 @@ describe("command output", () => {
   it.each([null, undefined])(
     "serializes an absent result as null (%s)",
     async (data) => {
-      const command = defineCommand({
+      const command = registerCommand({
         path: "example",
         description: "Example",
         implemented: true,
         run: async () => data,
       });
 
-      expect(formatOutput(await command.run(context), "json")).toBe("null");
+      expect(await present(command, "json")).toBe("null");
     },
   );
 });

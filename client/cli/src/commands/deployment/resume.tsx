@@ -1,5 +1,5 @@
 import { flagString } from "../../argv";
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { configDirectory } from "../../config";
 import {
   buildDeploymentEnvelope,
@@ -7,7 +7,7 @@ import {
 } from "../../crypto/signing";
 import { deploymentClient, deploymentName } from "./helpers";
 
-export const resumeCommand = defineCommand({
+export const resumeCommand = registerCommand({
   path: "deployment resume",
   description: "Resume deployment paused for authentication",
   implemented: true,

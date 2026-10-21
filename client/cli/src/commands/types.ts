@@ -1,4 +1,4 @@
-import type { ComponentType, ReactElement } from "react";
+import type { ComponentType } from "react";
 
 import type { ParsedArgs } from "../argv";
 
@@ -6,24 +6,17 @@ export interface CommandContext {
   args: ParsedArgs;
 }
 
-export interface CommandResult {
-  data: unknown;
-  renderHuman?: () => ReactElement | string;
-}
+export type CommandRunner<Data> = (context: CommandContext) => Promise<Data>;
 
-export type CommandRunner = (context: CommandContext) => Promise<CommandResult>;
-
-export interface CommandSpec {
+interface CommandMetadata {
   path: string;
   aliases?: string[];
   description: string;
-  implemented?: boolean;
-  run?: CommandRunner;
 }
 
-export type CommandDefinition<Data> = Omit<CommandSpec, "run"> & {
+export type CommandSpec<Data> = CommandMetadata & {
   implemented: true;
-  run: (context: CommandContext) => Promise<Data>;
+  run: CommandRunner<Data>;
 } & (
     | {
         View: ComponentType<{ data: Data }>;
@@ -35,3 +28,12 @@ export type CommandDefinition<Data> = Omit<CommandSpec, "run"> & {
       }
     | { View?: never; formatText?: never }
   );
+
+export interface RegisteredCommand extends CommandMetadata {
+  implemented: true;
+  /** Access the complete spec while preserving its shared data type. */
+  withSpec<Result>(visit: <Data>(spec: CommandSpec<Data>) => Result): Result;
+}
+
+export type CommandEntry =
+  RegisteredCommand | (CommandMetadata & { implemented?: false });

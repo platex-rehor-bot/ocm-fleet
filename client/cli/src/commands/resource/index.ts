@@ -1,4 +1,4 @@
-import type { CommandSpec } from "../types";
+import type { CommandEntry } from "../types";
 import { createCommand } from "./create";
 import { deleteCommand } from "./delete";
 import { describeCommand } from "./describe";
@@ -7,13 +7,13 @@ import { listCommand } from "./list";
 import { queryCommand } from "./query";
 import { typesCommand } from "./types";
 
-export const resourceCommand: CommandSpec = {
+export const resourceCommand: CommandEntry = {
   path: "resource",
   aliases: ["res"],
   description: "Manage addon-provided managed resources",
 };
 
-export const resourceCommands: CommandSpec[] = [
+export const resourceCommands: CommandEntry[] = [
   typesCommand,
   describeCommand,
   createCommand,

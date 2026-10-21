@@ -1,9 +1,9 @@
 import { flagString } from "../../argv";
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { clientForArgs } from "../context";
 import { resourceRoute } from "./helpers";
 
-export const listCommand = defineCommand({
+export const listCommand = registerCommand({
   path: "resource list",
   description: "List managed resources of a type",
   implemented: true,

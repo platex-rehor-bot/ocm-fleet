@@ -3,11 +3,11 @@ import Table from "ink-table";
 import React from "react";
 
 import { flagString } from "../../argv";
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { clientForArgs } from "../context";
 import type { DeploymentListResponse } from "./types";
 
-export const listCommand = defineCommand({
+export const listCommand = registerCommand({
   path: "deployment list",
   description: "List deployments",
   implemented: true,

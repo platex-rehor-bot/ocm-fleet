@@ -1,8 +1,8 @@
 import { flagString } from "../../argv";
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { clientForArgs } from "../context";
 
-export const queryCommand = defineCommand({
+export const queryCommand = registerCommand({
   path: "resource query",
   aliases: ["search"],
   description: "Query managed resources with CEL filter",

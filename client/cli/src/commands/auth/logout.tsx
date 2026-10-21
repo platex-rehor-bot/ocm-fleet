@@ -1,9 +1,9 @@
 import { flagString } from "../../argv";
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { clearStoredTokens } from "../../config";
 import { Output } from "../../ui";
 
-export const logoutCommand = defineCommand({
+export const logoutCommand = registerCommand({
   path: "auth logout",
   description: "Clear stored authentication tokens",
   implemented: true,

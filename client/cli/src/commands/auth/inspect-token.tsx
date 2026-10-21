@@ -1,8 +1,8 @@
 import { formatTokenInspection, inspectStoredTokens } from "../../auth/inspect";
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { Output } from "../../ui";
 
-export const inspectTokenCommand = defineCommand({
+export const inspectTokenCommand = registerCommand({
   path: "auth inspect-token",
   description: "Decode and display stored authentication tokens",
   implemented: true,

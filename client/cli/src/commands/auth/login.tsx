@@ -1,8 +1,8 @@
 import { runAuthLogin } from "../../auth/login";
-import { defineCommand } from "../../command";
+import { registerCommand } from "../../command";
 import { Output } from "../../ui";
 
-export const loginCommand = defineCommand({
+export const loginCommand = registerCommand({
   path: "auth login",
   description: "Authenticate with configured OIDC provider",
   implemented: true,

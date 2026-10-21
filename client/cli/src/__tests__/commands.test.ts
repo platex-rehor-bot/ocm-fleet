@@ -6,7 +6,7 @@ import { parseArgs } from "../argv";
 import { registerCommand } from "../command";
 import { helpText } from "../commands/help";
 import { findCommand } from "../commands/registry";
-import type { CommandEntry } from "../commands/types";
+import type { CommandEntry, CommandSpec } from "../commands/types";
 
 describe("command registry", () => {
   it("keeps resource aliases", () => {
@@ -19,23 +19,25 @@ describe("command registry", () => {
   });
 
   it("executes differently typed specs after registry lookup", async () => {
+    const namesCommand = {
+      path: "example names",
+      aliases: ["ls"],
+      description: "Names",
+      implemented: true,
+      run: async () => ["one", "two"],
+      formatText: (names) => names.join(", "),
+    } satisfies CommandSpec<string[]>;
+    const countCommand = {
+      path: "example count",
+      description: "Count",
+      implemented: true,
+      run: async ({ args }) => ({ count: args.positionals.length }),
+      formatText: (data) => `Count: ${data.count}`,
+    } satisfies CommandSpec<{ count: number }>;
     const commands: CommandEntry[] = [
       { path: "example", aliases: ["ex"], description: "Examples" },
-      registerCommand({
-        path: "example names",
-        aliases: ["ls"],
-        description: "Names",
-        implemented: true,
-        run: async () => ["one", "two"],
-        formatText: (names) => names.join(", "),
-      }),
-      registerCommand({
-        path: "example count",
-        description: "Count",
-        implemented: true,
-        run: async ({ args }) => ({ count: args.positionals.length }),
-        formatText: (data) => `Count: ${data.count}`,
-      }),
+      registerCommand(namesCommand),
+      registerCommand(countCommand),
     ];
 
     for (const [tokens, text, json] of [

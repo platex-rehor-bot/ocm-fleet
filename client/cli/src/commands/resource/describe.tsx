@@ -1,7 +1,11 @@
-import { registerCommand } from "../../command";
-import { describeResourceType, listResourceTypes } from "../../grpc/reflection";
+import {
+  describeResourceType,
+  listResourceTypes,
+  type ReflectedResourceType,
+} from "../../grpc/reflection";
+import type { CommandSpec } from "../types";
 
-export const describeCommand = registerCommand({
+export const describeCommand = {
   path: "resource describe",
   description: "Show managed resource schema",
   implemented: true,
@@ -29,4 +33,8 @@ export const describeCommand = registerCommand({
       `Spec (${specType}):`,
       ...fields.map((field) => `  ${field}`),
     ].join("\n"),
-});
+} satisfies CommandSpec<
+  Awaited<ReturnType<typeof describeResourceType>> & {
+    type: ReflectedResourceType;
+  }
+>;

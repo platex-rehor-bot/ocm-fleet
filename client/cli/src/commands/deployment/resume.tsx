@@ -1,13 +1,13 @@
 import { flagString } from "../../argv";
-import { registerCommand } from "../../command";
 import { configDirectory } from "../../config";
 import {
   buildDeploymentEnvelope,
   signDeploymentEnvelope,
 } from "../../crypto/signing";
+import type { CommandSpec } from "../types";
 import { deploymentClient, deploymentName } from "./helpers";
 
-export const resumeCommand = registerCommand({
+export const resumeCommand = {
   path: "deployment resume",
   description: "Resume deployment paused for authentication",
   implemented: true,
@@ -66,4 +66,4 @@ export const resumeCommand = registerCommand({
     );
     return response;
   },
-});
+} satisfies CommandSpec<unknown>;

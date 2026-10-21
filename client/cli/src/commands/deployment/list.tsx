@@ -3,11 +3,11 @@ import Table from "ink-table";
 import React from "react";
 
 import { flagString } from "../../argv";
-import { registerCommand } from "../../command";
 import { clientForArgs } from "../context";
+import type { CommandSpec } from "../types";
 import type { DeploymentListResponse } from "./types";
 
-export const listCommand = registerCommand({
+export const listCommand = {
   path: "deployment list",
   description: "List deployments",
   implemented: true,
@@ -26,7 +26,7 @@ export const listCommand = registerCommand({
     );
     return response.deployments ?? [];
   },
-});
+} satisfies CommandSpec<NonNullable<DeploymentListResponse["deployments"]>>;
 
 export function DeploymentListView({
   data: deployments,

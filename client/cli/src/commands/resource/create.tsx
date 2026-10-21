@@ -1,9 +1,9 @@
 import { flagString } from "../../argv";
-import { registerCommand } from "../../command";
 import { clientForArgs } from "../context";
+import type { CommandSpec } from "../types";
 import { resourceID, resourceRoute, resourceSpec } from "./helpers";
 
-export const createCommand = registerCommand({
+export const createCommand = {
   path: "resource create",
   description: "Create a managed resource",
   implemented: true,
@@ -24,4 +24,4 @@ export const createCommand = registerCommand({
     );
     return response;
   },
-});
+} satisfies CommandSpec<unknown>;

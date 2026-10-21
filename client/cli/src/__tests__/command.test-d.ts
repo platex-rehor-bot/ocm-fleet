@@ -2,6 +2,8 @@ import type { ComponentType } from "react";
 
 import { parseArgs } from "../argv";
 import { registerCommand } from "../command";
+import { listCommand } from "../commands/deployment/list";
+import type { DeploymentListItem } from "../commands/deployment/types";
 import type { CommandEntry, CommandSpec } from "../commands/types";
 
 declare const View: ComponentType<{ data: { name: string } }>;
@@ -42,13 +44,17 @@ registerCommand({
   formatText: (data: { name: string }) => data.name,
 });
 
-const spec: CommandSpec<{ name: string }> = {
+const spec = {
   path: "example",
   description: "Example",
   implemented: true,
   run: async () => ({ name: "ready" }),
   View,
-};
+} satisfies CommandSpec<{ name: string }>;
+
+// Leaf commands expose their typed specs before the group index registers them.
+const deploymentSpec: CommandSpec<DeploymentListItem[]> = listCommand;
+void deploymentSpec;
 
 const registered = registerCommand(spec);
 

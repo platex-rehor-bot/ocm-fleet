@@ -1,9 +1,9 @@
-import { registerCommand } from "../../command";
 import { Output } from "../../ui";
 import { clientForArgs } from "../context";
+import type { CommandSpec } from "../types";
 import { resourceRoute } from "./helpers";
 
-export const deleteCommand = registerCommand({
+export const deleteCommand = {
   path: "resource delete",
   description: "Delete a managed resource",
   implemented: true,
@@ -18,4 +18,4 @@ export const deleteCommand = registerCommand({
     ).request(`${route.path}/${encodeURIComponent(id)}`, { method: "DELETE" });
     return "Deleted.";
   },
-});
+} satisfies CommandSpec<string>;

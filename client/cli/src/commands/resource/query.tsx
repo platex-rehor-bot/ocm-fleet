@@ -1,8 +1,8 @@
 import { flagString } from "../../argv";
-import { registerCommand } from "../../command";
 import { clientForArgs } from "../context";
+import type { CommandSpec } from "../types";
 
-export const queryCommand = registerCommand({
+export const queryCommand = {
   path: "resource query",
   aliases: ["search"],
   description: "Query managed resources with CEL filter",
@@ -23,4 +23,4 @@ export const queryCommand = registerCommand({
     );
     return response;
   },
-});
+} satisfies CommandSpec<unknown>;

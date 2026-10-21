@@ -1,3 +1,4 @@
+import { registerCommand } from "../../command";
 import type { CommandEntry } from "../types";
 import { createCommand } from "./create";
 import { deleteCommand } from "./delete";
@@ -12,9 +13,9 @@ export const deploymentCommand: CommandEntry = {
 };
 
 export const deploymentCommands: CommandEntry[] = [
-  createCommand,
-  getCommand,
-  listCommand,
-  resumeCommand,
-  deleteCommand,
+  registerCommand(createCommand),
+  registerCommand(getCommand),
+  registerCommand(listCommand),
+  registerCommand(resumeCommand),
+  registerCommand(deleteCommand),
 ];

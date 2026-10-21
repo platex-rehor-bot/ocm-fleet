@@ -1,3 +1,4 @@
+import { registerCommand } from "../../command";
 import type { CommandEntry } from "../types";
 import { createCommand } from "./create";
 import { deleteCommand } from "./delete";
@@ -14,11 +15,11 @@ export const resourceCommand: CommandEntry = {
 };
 
 export const resourceCommands: CommandEntry[] = [
-  typesCommand,
-  describeCommand,
-  createCommand,
-  getCommand,
-  listCommand,
-  queryCommand,
-  deleteCommand,
+  registerCommand(typesCommand),
+  registerCommand(describeCommand),
+  registerCommand(createCommand),
+  registerCommand(getCommand),
+  registerCommand(listCommand),
+  registerCommand(queryCommand),
+  registerCommand(deleteCommand),
 ];

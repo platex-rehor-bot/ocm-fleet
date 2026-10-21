@@ -1,10 +1,10 @@
 import { flagString } from "../../argv";
-import { registerCommand } from "../../command";
 import { configDirectory } from "../../config";
 import {
   buildDeploymentEnvelope,
   signDeploymentEnvelope,
 } from "../../crypto/signing";
+import type { CommandSpec } from "../types";
 import {
   deploymentBody,
   deploymentClient,
@@ -12,7 +12,7 @@ import {
   readManifest,
 } from "./helpers";
 
-export const createCommand = registerCommand({
+export const createCommand = {
   path: "deployment create",
   description: "Create a deployment",
   implemented: true,
@@ -50,4 +50,4 @@ export const createCommand = registerCommand({
     });
     return response;
   },
-});
+} satisfies CommandSpec<unknown>;

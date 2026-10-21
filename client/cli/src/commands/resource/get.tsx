@@ -1,8 +1,8 @@
-import { registerCommand } from "../../command";
 import { clientForArgs } from "../context";
+import type { CommandSpec } from "../types";
 import { resourceRoute } from "./helpers";
 
-export const getCommand = registerCommand({
+export const getCommand = {
   path: "resource get",
   description: "Get a managed resource by id",
   implemented: true,
@@ -16,4 +16,4 @@ export const getCommand = registerCommand({
     ).request(`${route.path}/${encodeURIComponent(id)}`);
     return response;
   },
-});
+} satisfies CommandSpec<unknown>;

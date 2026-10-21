@@ -1,3 +1,4 @@
+import { registerCommand } from "../../command";
 import type { CommandEntry } from "../types";
 import { enrollSigningCommand } from "./enroll-signing";
 import { inspectTokenCommand } from "./inspect-token";
@@ -11,9 +12,9 @@ export const authCommand: CommandEntry = {
 };
 
 export const authCommands: CommandEntry[] = [
-  setupCommand,
-  loginCommand,
-  logoutCommand,
-  inspectTokenCommand,
-  enrollSigningCommand,
+  registerCommand(setupCommand),
+  registerCommand(loginCommand),
+  registerCommand(logoutCommand),
+  registerCommand(inspectTokenCommand),
+  registerCommand(enrollSigningCommand),
 ];

@@ -1,7 +1,7 @@
-import { registerCommand } from "../../command";
+import type { CommandSpec } from "../types";
 import { deploymentClient, deploymentName } from "./helpers";
 
-export const getCommand = registerCommand({
+export const getCommand = {
   path: "deployment get",
   description: "Get deployment by name",
   implemented: true,
@@ -13,4 +13,4 @@ export const getCommand = registerCommand({
     ).request(`/v1alpha/${deploymentName(name)}`);
     return response;
   },
-});
+} satisfies CommandSpec<unknown>;

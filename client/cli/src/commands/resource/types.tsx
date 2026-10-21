@@ -1,7 +1,10 @@
-import { registerCommand } from "../../command";
-import { listResourceTypes } from "../../grpc/reflection";
+import {
+  listResourceTypes,
+  type ReflectedResourceType,
+} from "../../grpc/reflection";
+import type { CommandSpec } from "../types";
 
-export const typesCommand = registerCommand({
+export const typesCommand = {
   path: "resource types",
   description: "List available extension resource types",
   implemented: true,
@@ -18,4 +21,4 @@ export const typesCommand = registerCommand({
       ),
     ].join("\n");
   },
-});
+} satisfies CommandSpec<ReflectedResourceType[]>;

@@ -1,9 +1,9 @@
 import { flagString } from "../../argv";
-import { registerCommand } from "../../command";
 import { clientForArgs } from "../context";
+import type { CommandSpec } from "../types";
 import { resourceRoute } from "./helpers";
 
-export const listCommand = registerCommand({
+export const listCommand = {
   path: "resource list",
   description: "List managed resources of a type",
   implemented: true,
@@ -22,7 +22,7 @@ export const listCommand = registerCommand({
     const resources = listResources(response, route.collection);
     return resources;
   },
-});
+} satisfies CommandSpec<unknown>;
 
 function listResources(response: unknown, collection: string): unknown {
   if (

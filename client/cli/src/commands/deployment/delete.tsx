@@ -1,8 +1,8 @@
-import { registerCommand } from "../../command";
 import { Output } from "../../ui";
+import type { CommandSpec } from "../types";
 import { deploymentClient, deploymentName } from "./helpers";
 
-export const deleteCommand = registerCommand({
+export const deleteCommand = {
   path: "deployment delete",
   description: "Delete a deployment",
   implemented: true,
@@ -15,4 +15,4 @@ export const deleteCommand = registerCommand({
     ).request(`/v1alpha/${deploymentName(name)}`, { method: "DELETE" });
     return "Deleted.";
   },
-});
+} satisfies CommandSpec<string>;

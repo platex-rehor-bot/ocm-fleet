@@ -1,9 +1,10 @@
 import { runAuthSetup } from "../../auth/setup";
+import { defineCommand } from "../../command";
 import { Output } from "../../ui";
-import type { CommandSpec } from "../types";
-export const setupCommand: CommandSpec = {
+export const setupCommand = defineCommand({
   path: "auth setup",
   description: "Configure OIDC client settings",
   implemented: true,
-  run: async ({ args }) => <Output value={await runAuthSetup(args)} />,
-};
+  View: Output,
+  run: async ({ args }) => runAuthSetup(args),
+});

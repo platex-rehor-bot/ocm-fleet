@@ -1,14 +1,15 @@
 import { flagString } from "../../argv";
+import { defineCommand } from "../../command";
 import { clearStoredTokens } from "../../config";
 import { Output } from "../../ui";
-import type { CommandSpec } from "../types";
 
-export const logoutCommand: CommandSpec = {
+export const logoutCommand = defineCommand({
   path: "auth logout",
   description: "Clear stored authentication tokens",
   implemented: true,
+  View: Output,
   run: async ({ args }) => {
     await clearStoredTokens(flagString(args, "config-dir") || undefined);
-    return <Output value="Logged out." />;
+    return "Logged out.";
   },
-};
+});

@@ -1,11 +1,10 @@
 import { flagString } from "../../argv";
+import { defineCommand } from "../../command";
 import { configDirectory } from "../../config";
 import {
   buildDeploymentEnvelope,
   signDeploymentEnvelope,
 } from "../../crypto/signing";
-import { JsonOutput } from "../../ui";
-import type { CommandSpec } from "../types";
 import {
   deploymentBody,
   deploymentClient,
@@ -13,7 +12,7 @@ import {
   readManifest,
 } from "./helpers";
 
-export const createCommand: CommandSpec = {
+export const createCommand = defineCommand({
   path: "deployment create",
   description: "Create a deployment",
   implemented: true,
@@ -49,6 +48,6 @@ export const createCommand: CommandSpec = {
       method: "POST",
       body: JSON.stringify(body),
     });
-    return <JsonOutput value={response} />;
+    return response;
   },
-};
+});

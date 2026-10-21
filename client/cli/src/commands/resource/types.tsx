@@ -1,26 +1,21 @@
+import { defineCommand } from "../../command";
 import { listResourceTypes } from "../../grpc/reflection";
-import { PlainOutput } from "../../ui";
-import type { CommandSpec } from "../types";
 
-export const typesCommand: CommandSpec = {
+export const typesCommand = defineCommand({
   path: "resource types",
   description: "List available extension resource types",
   implemented: true,
-  run: async ({ args }) => {
-    const types = await listResourceTypes(args);
+  run: async ({ args }) => listResourceTypes(args),
+  formatText: (types) => {
     if (types.length === 0) {
-      return <PlainOutput value="No extension resource types available." />;
+      return "No extension resource types available.";
     }
-    return (
-      <PlainOutput
-        value={[
-          "TYPE\tSINGULAR\tSERVICE",
-          ...types.map(
-            (type) =>
-              `${type.qualifiedName}\t${type.singular}\t${type.serviceName}`,
-          ),
-        ].join("\n")}
-      />
-    );
+    return [
+      "TYPE\tSINGULAR\tSERVICE",
+      ...types.map(
+        (type) =>
+          `${type.qualifiedName}\t${type.singular}\t${type.serviceName}`,
+      ),
+    ].join("\n");
   },
-};
+});

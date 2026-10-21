@@ -1,6 +1,6 @@
 import { performance } from "node:perf_hooks";
 
-import { print } from "./app";
+import { print, printView } from "./app";
 import { hasFlag, outputFormat, parseArgs } from "./argv";
 import { helpText } from "./commands/help";
 import { commandSpecs, findCommand } from "./commands/registry";
@@ -23,7 +23,7 @@ async function main(): Promise<void> {
         item.path === command && !item.implemented && !item.path.includes(" "),
     )
   ) {
-    await print(<Output value={helpText(command || undefined)} />);
+    await printView(<Output data={helpText(command || undefined)} />);
     return;
   }
 
@@ -37,7 +37,7 @@ async function main(): Promise<void> {
     );
 
   const output = outputFormat(args);
-  await print(await spec.run({ args, output }), output);
+  await print(await spec.run({ args }), output);
 }
 
 main()

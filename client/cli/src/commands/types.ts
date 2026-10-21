@@ -1,13 +1,17 @@
-import { ReactNode } from "react";
+import type { ComponentType, ReactElement } from "react";
 
-import type { OutputFormat, ParsedArgs } from "../argv";
+import type { ParsedArgs } from "../argv";
 
 export interface CommandContext {
   args: ParsedArgs;
-  output: OutputFormat;
 }
 
-export type CommandRunner = (context: CommandContext) => Promise<ReactNode>;
+export interface CommandResult {
+  data: unknown;
+  renderHuman?: () => ReactElement | string;
+}
+
+export type CommandRunner = (context: CommandContext) => Promise<CommandResult>;
 
 export interface CommandSpec {
   path: string;
@@ -16,3 +20,18 @@ export interface CommandSpec {
   implemented?: boolean;
   run?: CommandRunner;
 }
+
+export type CommandDefinition<Data> = Omit<CommandSpec, "run"> & {
+  implemented: true;
+  run: (context: CommandContext) => Promise<Data>;
+} & (
+    | {
+        View: ComponentType<{ data: Data }>;
+        formatText?: never;
+      }
+    | {
+        View?: never;
+        formatText: (data: Data) => string;
+      }
+    | { View?: never; formatText?: never }
+  );

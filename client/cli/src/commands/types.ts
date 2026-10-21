@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import type { ReactElement } from "react";
 
 import type { ParsedArgs } from "../argv";
 
@@ -18,20 +18,12 @@ interface CommandMetadata {
 }
 
 /** Defines a runnable command whose runner and optional presenter share one data type. */
-export type CommandSpec<Data> = CommandMetadata & {
+export interface CommandSpec<Data> extends CommandMetadata {
   implemented: true;
   run: CommandRunner<Data>;
-} & (
-    | {
-        View: ComponentType<{ data: Data }>;
-        formatText?: never;
-      }
-    | {
-        View?: never;
-        formatText: (data: Data) => string;
-      }
-    | { View?: never; formatText?: never }
-  );
+  /** Produces human output; keep React hooks inside returned components. */
+  present?: (data: Data) => string | ReactElement;
+}
 
 /** Stores a runnable command in the registry, preserving typed access to its spec. */
 export interface RegisteredCommand extends CommandMetadata {

@@ -12,10 +12,7 @@ export async function executeCommand<Data>(
   output: OutputFormat = "table",
 ): Promise<ReactElement | string> {
   const data = await spec.run(context);
-  if (output === "table") {
-    if (spec.View) return <spec.View data={data} />;
-    if (spec.formatText) return spec.formatText(data);
-  }
+  if (output === "table" && spec.present) return spec.present(data);
   return JSON.stringify(data, null, 2) ?? "null";
 }
 

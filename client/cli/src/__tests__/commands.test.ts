@@ -25,14 +25,14 @@ describe("command registry", () => {
       description: "Names",
       implemented: true,
       run: async () => ["one", "two"],
-      formatText: (names) => names.join(", "),
+      present: (names) => names.join(", "),
     } satisfies CommandSpec<string[]>;
     const countCommand = {
       path: "example count",
       description: "Count",
       implemented: true,
       run: async ({ args }) => ({ count: args.positionals.length }),
-      formatText: (data) => `Count: ${data.count}`,
+      present: (data) => `Count: ${data.count}`,
     } satisfies CommandSpec<{ count: number }>;
     const commands: CommandEntry[] = [
       { path: "example", aliases: ["ex"], description: "Examples" },

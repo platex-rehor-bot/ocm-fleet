@@ -21,7 +21,7 @@ export const describeCommand = {
     const description = await describeResourceType(type, args);
     return { type, ...description };
   },
-  formatText: ({ type, methods, specType, fields }) =>
+  present: ({ type, methods, specType, fields }) =>
     [
       `Type:     ${type.qualifiedName}`,
       `Singular: ${type.singular}`,

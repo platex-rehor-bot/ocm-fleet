@@ -7,7 +7,7 @@ export const inspectTokenCommand = {
   description: "Decode and display stored authentication tokens",
   implemented: true,
   run: async ({ args }) => inspectStoredTokens(args),
-  View: TokenInspectionView,
+  present: (data) => <TokenInspectionView data={data} />,
 } satisfies CommandSpec<Awaited<ReturnType<typeof inspectStoredTokens>>>;
 
 function TokenInspectionView({

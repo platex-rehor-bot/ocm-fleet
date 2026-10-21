@@ -7,7 +7,7 @@ export const deleteCommand = {
   path: "resource delete",
   description: "Delete a managed resource",
   implemented: true,
-  View: Output,
+  present: (data) => <Output data={data} />,
   run: async ({ args }) => {
     const type = args.positionals[0];
     const id = args.positionals[1];

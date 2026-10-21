@@ -6,7 +6,7 @@ export const deleteCommand = {
   path: "deployment delete",
   description: "Delete a deployment",
   implemented: true,
-  View: Output,
+  present: (data) => <Output data={data} />,
   run: async ({ args }) => {
     const name = args.positionals[0];
     if (!name) throw new Error("deployment name is required");

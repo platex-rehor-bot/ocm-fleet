@@ -11,7 +11,7 @@ export const listCommand = {
   path: "deployment list",
   description: "List deployments",
   implemented: true,
-  View: DeploymentListView,
+  present: (data) => <DeploymentListView data={data} />,
   run: async ({ args }) => {
     const query = new URLSearchParams();
     const pageSize = flagString(args, "page-size");

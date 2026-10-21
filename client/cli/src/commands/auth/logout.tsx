@@ -7,7 +7,7 @@ export const logoutCommand = {
   path: "auth logout",
   description: "Clear stored authentication tokens",
   implemented: true,
-  View: Output,
+  present: (data) => <Output data={data} />,
   run: async ({ args }) => {
     await clearStoredTokens(flagString(args, "config-dir") || undefined);
     return "Logged out.";

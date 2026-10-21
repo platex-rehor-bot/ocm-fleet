@@ -9,7 +9,7 @@ export const typesCommand = {
   description: "List available extension resource types",
   implemented: true,
   run: async ({ args }) => listResourceTypes(args),
-  formatText: (types) => {
+  present: (types) => {
     if (types.length === 0) {
       return "No extension resource types available.";
     }

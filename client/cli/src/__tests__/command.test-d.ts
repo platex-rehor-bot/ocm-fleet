@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import { type ComponentType, createElement } from "react";
 
 import { parseArgs } from "../argv";
 import { registerCommand } from "../command";
@@ -13,16 +13,7 @@ registerCommand({
   description: "Example",
   implemented: true,
   run: async () => ({ name: "ready" }),
-  View,
-});
-
-registerCommand({
-  path: "example",
-  description: "Example",
-  implemented: true,
-  run: async () => ({ count: 1 }),
-  // @ts-expect-error The view must accept the runner's data.
-  View,
+  present: (data) => createElement(View, { data }),
 });
 
 registerCommand<{ name: string }>({
@@ -30,18 +21,26 @@ registerCommand<{ name: string }>({
   description: "Example",
   implemented: true,
   run: async () => ({ name: "ready" }),
-  // @ts-expect-error The text formatter must accept the runner's data.
-  formatText: (data: { count: number }) => String(data.count),
+  // @ts-expect-error The presenter must accept the runner's data.
+  present: (data: { count: number }) => String(data.count),
 });
 
-// @ts-expect-error A command cannot declare both a view and an exact-text formatter.
-registerCommand({
+registerCommand<{ name: string }>({
   path: "example",
   description: "Example",
   implemented: true,
   run: async () => ({ name: "ready" }),
-  View,
-  formatText: (data: { name: string }) => data.name,
+  // @ts-expect-error A presenter must return a string or React element.
+  present: (data) => ({ name: data.name }),
+});
+
+registerCommand<{ name: string }>({
+  path: "example",
+  description: "Example",
+  implemented: true,
+  run: async () => ({ name: "ready" }),
+  // @ts-expect-error The component must accept the data passed by its presenter.
+  present: (data) => createElement(View, { data: { count: data.name.length } }),
 });
 
 const spec = {
@@ -49,7 +48,7 @@ const spec = {
   description: "Example",
   implemented: true,
   run: async () => ({ name: "ready" }),
-  View,
+  present: (data) => createElement(View, { data }),
 } satisfies CommandSpec<{ name: string }>;
 
 // Leaf commands expose their typed specs before the group index registers them.
@@ -73,7 +72,7 @@ const invalidSpec: CommandSpec<{ name: string }> = {
   implemented: true,
   // @ts-expect-error The spec itself checks the data returned by run.
   run: async () => ({ count: 1 }),
-  View,
+  present: (data) => createElement(View, { data }),
 };
 void invalidSpec;
 

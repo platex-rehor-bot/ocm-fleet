@@ -15,7 +15,7 @@ afterEach(cleanup);
 
 const context = { args: parseArgs([]) };
 
-async function present(command: RegisteredCommand, output: OutputFormat) {
+async function execute(command: RegisteredCommand, output: OutputFormat) {
   return command.withSpec((spec) => executeCommand(spec, context, output));
 }
 
@@ -27,12 +27,12 @@ describe("command output", () => {
       description: "Example",
       implemented: true,
       run: async () => data,
-      View() {
-        throw new Error("JSON must bypass React");
+      present() {
+        throw new Error("JSON must bypass human presentation");
       },
     });
 
-    expect(await present(command, "json")).toBe(JSON.stringify(data, null, 2));
+    expect(await execute(command, "json")).toBe(JSON.stringify(data, null, 2));
   });
 
   it("passes returned data to a React component that can use hooks", async () => {
@@ -45,16 +45,16 @@ describe("command output", () => {
       description: "Example",
       implemented: true,
       run: async () => ({ name: "fleetctl ready" }),
-      View,
+      present: (data) => <View data={data} />,
     });
 
-    const content = await present(command, "table");
+    const content = await execute(command, "table");
     if (typeof content === "string") throw new Error("Expected a React view");
     const view = render(content);
     expect(view.lastFrame()).toBe("fleetctl ready");
   });
 
-  it("uses JSON as the default presentation when a command has no human view", async () => {
+  it("uses JSON as the default presentation when a command has no presenter", async () => {
     const command = registerCommand({
       path: "example",
       description: "Example",
@@ -62,8 +62,8 @@ describe("command output", () => {
       run: async () => ({ names: ["one", "two"] }),
     });
 
-    expect(await present(command, "table")).toBe(
-      await present(command, "json"),
+    expect(await execute(command, "table")).toBe(
+      await execute(command, "json"),
     );
   });
 
@@ -73,29 +73,28 @@ describe("command output", () => {
       description: "Example",
       implemented: true,
       run: async () => ["ocm.kind.v1alpha/clusters"],
-      formatText: (data) => ["TYPE", ...data].join("\n"),
+      present: (data) => ["TYPE", ...data].join("\n"),
     });
 
-    expect(await present(command, "table")).toBe(
+    expect(await execute(command, "table")).toBe(
       "TYPE\nocm.kind.v1alpha/clusters",
     );
-    expect(await present(command, "json")).toBe(
+    expect(await execute(command, "json")).toBe(
       '[\n  "ocm.kind.v1alpha/clusters"\n]',
     );
   });
 
-  it("does not evaluate an exact-text formatter for JSON output", async () => {
+  it("preserves an empty string returned by the presenter", async () => {
     const command = registerCommand({
       path: "example",
       description: "Example",
       implemented: true,
       run: async () => ["ocm.kind.v1alpha/clusters"],
-      formatText() {
-        throw new Error("JSON must bypass human text formatting");
-      },
+      present: () => "",
     });
 
-    expect(await present(command, "json")).toBe(
+    expect(await execute(command, "table")).toBe("");
+    expect(await execute(command, "json")).toBe(
       '[\n  "ocm.kind.v1alpha/clusters"\n]',
     );
   });
@@ -110,7 +109,7 @@ describe("command output", () => {
         run: async () => data,
       });
 
-      expect(await present(command, "json")).toBe("null");
+      expect(await execute(command, "json")).toBe("null");
     },
   );
 });

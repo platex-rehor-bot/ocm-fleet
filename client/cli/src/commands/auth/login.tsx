@@ -6,6 +6,6 @@ export const loginCommand = {
   path: "auth login",
   description: "Authenticate with configured OIDC provider",
   implemented: true,
-  View: Output,
+  present: (data) => <Output data={data} />,
   run: async ({ args }) => runAuthLogin(args),
 } satisfies CommandSpec<string>;

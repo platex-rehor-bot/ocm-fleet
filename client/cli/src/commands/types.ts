@@ -36,7 +36,11 @@ export type CommandSpec<Data> = CommandMetadata & {
 /** Stores a runnable command in the registry, preserving typed access to its spec. */
 export interface RegisteredCommand extends CommandMetadata {
   implemented: true;
-  /** Visit the complete spec without assuming which data type this command uses. */
+  /**
+   * Visit the complete spec without assuming which data type this command uses.
+   * The generic callback encodes an existential type: Data is hidden but consistent within the spec.
+   * @see https://github.com/microsoft/TypeScript/issues/14466
+   */
   withSpec<Result>(visit: <Data>(spec: CommandSpec<Data>) => Result): Result;
 }
 

@@ -2,18 +2,22 @@ import type { ComponentType } from "react";
 
 import type { ParsedArgs } from "../argv";
 
+/** Parsed input passed to a command's runner. */
 export interface CommandContext {
   args: ParsedArgs;
 }
 
+/** Performs the command's work and returns data for the output layer. */
 export type CommandRunner<Data> = (context: CommandContext) => Promise<Data>;
 
+/** Names and help text shared by runnable commands and command groups. */
 interface CommandMetadata {
   path: string;
   aliases?: string[];
   description: string;
 }
 
+/** Defines a runnable command whose runner and optional presenter share one data type. */
 export type CommandSpec<Data> = CommandMetadata & {
   implemented: true;
   run: CommandRunner<Data>;
@@ -29,11 +33,13 @@ export type CommandSpec<Data> = CommandMetadata & {
     | { View?: never; formatText?: never }
   );
 
+/** Stores a runnable command in the registry, preserving typed access to its spec. */
 export interface RegisteredCommand extends CommandMetadata {
   implemented: true;
-  /** Access the complete spec while preserving its shared data type. */
+  /** Visit the complete spec without assuming which data type this command uses. */
   withSpec<Result>(visit: <Data>(spec: CommandSpec<Data>) => Result): Result;
 }
 
+/** A registry entry: either a runnable command or metadata for a group or unimplemented command. */
 export type CommandEntry =
   RegisteredCommand | (CommandMetadata & { implemented?: false });
